@@ -2,14 +2,15 @@ import React from "react";
 import ComponentView from "./music-view";
 import axios from "axios";
 import hash from "../../hash";
-import { withRouter } from 'react-router-dom';
+import history from "../../history";
+import { withRouter } from "react-router-dom";
 var Spotify = require("spotify-web-api-js");
 const clientId = "20c16b5b9cf144fe9c6f7859c2b78347";
 const redirectUri = "http://localhost:3000/music";
 const scopes = [
   "user-read-currently-playing",
   "user-read-playback-state",
-  "user-read-recently-played"
+  "user-read-recently-played",
 ];
 const authEndpoint = "https://accounts.spotify.com/authorize";
 const spotifyToken = localStorage.getItem("spotify-token");
@@ -20,7 +21,7 @@ class Main extends React.Component {
       access_token: "",
       signedIn: false,
       token: null,
-      doneLoading: false
+      doneLoading: false,
     };
   }
 
@@ -28,7 +29,7 @@ class Main extends React.Component {
     let _token = null;
     console.log("SPOT TOEKN", spotifyToken);
 
-    if (localStorage.getItem("spotify-token") == "undefined") {
+    if (localStorage.getItem("spotify-token") == "undefined" || null) {
       console.log("HEERE");
       window.open(
         `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
@@ -52,42 +53,36 @@ class Main extends React.Component {
     await spotifyApi.setAccessToken(token);
     await spotifyApi
       .getUserPlaylists()
-      .then(res => {
+      .then((res) => {
         this.setState({
-          playlists: res.items
+          playlists: res.items,
         });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
 
     await spotifyApi
       .getMyRecentlyPlayedTracks()
-      .then(res => {
+      .then((res) => {
         this.setState({
-          recentlyPlayed: res.items
+          recentlyPlayed: res.items,
         });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
 
     await this.setState({
-      doneLoading: true
+      doneLoading: true,
+      accessToken: token,
     });
   }
 
-  async refreshToken() {}
-
-  async getPlaylists() {
-    var spotifyApi = new Spotify();
-    console.log(this.state.access_token);
-    await spotifyApi.setAccessToken(this.state.access_token);
-  }
+ 
 
   displayArtists(artists) {
-    console.log(artists);
     if (artists.length === 1) {
       return artists[0].name;
     } else if (artists.length > 1) {
       let artistNames = [];
-      artists.forEach(artist => {
+      artists.forEach((artist) => {
         artistNames.push(artist.name);
       });
       return artistNames.join(" + ");

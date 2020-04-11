@@ -3,8 +3,9 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
 import SideDrawer from "./sideDrawer";
 import Player from "./player";
+import Playlist from "./library/playlist";
 import Content from "./content";
-import Search from "./search"
+import Search from "./search";
 import { Router, Switch, Route } from "react-router-dom";
 import Library from "./library";
 import history from "../../history";
@@ -17,26 +18,21 @@ const theme = createMuiTheme({
       light: "#757ce8",
       main: "#1db954",
       dark: "#191414",
-      contrastText: "#fff"
+      contrastText: "#fff",
     },
     secondary: {
       light: "#ff7961",
       main: "#ffffff",
       dark: "#191414",
-      contrastText: "#000"
-    }
+      contrastText: "#000",
+    },
   },
   typography: {
-    useNextVariants: true
-  }
+    useNextVariants: true,
+  },
 });
 
-const clientId = "20c16b5b9cf144fe9c6f7859c2b78347";
-const redirectUri = "http://localhost:3000";
-const scopes = ["user-read-currently-playing", "user-read-playback-state"];
-const authEndpoint = "https://accounts.spotify.com/authorize";
-
-var view = function() {
+var view = function () {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline>
@@ -61,14 +57,18 @@ var view = function() {
                     )}
                   />
                   <Route
+                  exact
                     path="/music/library"
                     render={() => (
                       <Library
                         displayArtists={this.displayArtists}
                         recentlyPlayed={this.state.recentlyPlayed}
+                        playlists={this.state.playlists}
+                        playListTracks={this.state.playListTracks}
                       ></Library>
                     )}
                   />
+
                   <Route
                     path="/music/search"
                     render={() => (
@@ -76,6 +76,16 @@ var view = function() {
                         displayArtists={this.displayArtists}
                         recentlyPlayed={this.state.recentlyPlayed}
                       ></Search>
+                    )}
+                  />
+
+                  <Route
+                    
+                    path={`/music/library/playlist/:id`}
+                    render={() => (
+                      <Playlist
+                      // playListTracks={this.state.playListTracks}
+                      ></Playlist>
                     )}
                   />
                 </Switch>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import {
   List,
   ListItem,
@@ -12,7 +12,7 @@ import {
   withWidth,
   Paper,
   Divider,
-  ListItemAvatar
+  ListItemAvatar,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import GithubIcon from "@material-ui/icons/GitHub";
@@ -45,20 +45,20 @@ let mainButtons = (
     </ListItem>
   </List>
 );
-var view = function() {
+var view = function () {
   return (
     <div className="">
       <Paper
         style={{
-          backgroundColor: "rgba(0, 0, 0, 0.5)"
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
       >
         {mainButtons}
         <Divider />
         <div className="mt-3 ml-2">
           Recently Played
-          {this.props.recentlyPlayed.map(x => (
-            <ListItem>
+          {this.props.recentlyPlayed.map((x) => (
+            <ListItem className="recentTrack" onClick={() => console.log(x)}>
               <ListItemIcon>
                 <Avatar src={x.track.album.images[2].url} />
               </ListItemIcon>
@@ -69,7 +69,7 @@ var view = function() {
                     fontSize: 15,
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
-                    overflow: "hidden"
+                    overflow: "hidden",
                   }}
                 >
                   {x.track.name}
@@ -79,7 +79,7 @@ var view = function() {
                     fontSize: 13,
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
-                    overflow: "hidden"
+                    overflow: "hidden",
                   }}
                 >
                   {this.props.displayArtists(x.track.artists)}

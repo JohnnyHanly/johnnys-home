@@ -1,5 +1,6 @@
 import React from "react";
 import ComponentView from "./library-view";
+import history from "../../../history";
 
 class Main extends React.Component {
   constructor(props) {
@@ -8,8 +9,10 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
-    console.log("LIBRARY");
+    console.log(this.props);
   }
+
+  
   render() {
     return ComponentView.bind(this)();
   }
