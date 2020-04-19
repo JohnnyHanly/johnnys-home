@@ -11,6 +11,7 @@ const scopes = [
   "user-read-currently-playing",
   "user-read-playback-state",
   "user-read-recently-played",
+  "user-modify-playback-state",
 ];
 const authEndpoint = "https://accounts.spotify.com/authorize";
 const spotifyToken = localStorage.getItem("spotify-token");
@@ -47,16 +48,48 @@ class Main extends React.Component {
     }
   }
 
+  async onTrackSelected(track) {
+    let playbackString = `spotify:track:${track.id}`;
+    console.log(this.state);
+    var spotifyApi = new Spotify();
+    await spotifyApi
+      .play({
+        uris: [playbackString],
+      })
+      .then((res) => {
+        console.log(res);
+
+        spotifyApi.getMyCurrentPlayingTrack().then((res1) => {
+          console.log("DONE")
+          this.setState({
+            currentTrack: res1,
+          });
+        });
+      });
+  }
+  playingSucc() {
+    console.log("SUCC");
+  }
+  playErr() {
+    console.log("ERR");
+  }
   async getUser(token) {
     var spotifyApi = new Spotify();
-    console.log(this.state.token);
-    await spotifyApi.setAccessToken(token);
+    await spotifyApi.setAccessToken(spotifyToken);
     await spotifyApi
       .getUserPlaylists()
       .then((res) => {
         this.setState({
           playlists: res.items,
         });
+      })
+      .catch((err) => console.log(err));
+
+    await spotifyApi
+      .getMyCurrentPlayingTrack()
+      .then((res) => {
+        this.setState({ currentTrack: res });
+        console.log(res);
       })
       .catch((err) => console.log(err));
 
@@ -74,8 +107,6 @@ class Main extends React.Component {
       accessToken: token,
     });
   }
-
- 
 
   displayArtists(artists) {
     if (artists.length === 1) {

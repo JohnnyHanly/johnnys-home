@@ -8,6 +8,7 @@ import Content from "./content";
 import Search from "./search";
 import { Router, Switch, Route } from "react-router-dom";
 import Library from "./library";
+import Album from "./library/album";
 import history from "../../history";
 
 import "./styles.css";
@@ -41,6 +42,7 @@ var view = function () {
             <div className="row">
               <div className="col-2">
                 <SideDrawer
+                  history={this.props.history}
                   displayArtists={this.displayArtists}
                   recentlyPlayed={this.state.recentlyPlayed}
                 />
@@ -57,13 +59,14 @@ var view = function () {
                     )}
                   />
                   <Route
-                  exact
+                    exact
                     path="/music/library"
                     render={() => (
                       <Library
                         displayArtists={this.displayArtists}
                         recentlyPlayed={this.state.recentlyPlayed}
                         playlists={this.state.playlists}
+                        onTrackSelected={this.onTrackSelected.bind(this)}
                         playListTracks={this.state.playListTracks}
                       ></Library>
                     )}
@@ -80,18 +83,17 @@ var view = function () {
                   />
 
                   <Route
-                    
                     path={`/music/library/playlist/:id`}
-                    render={() => (
-                      <Playlist
-                      // playListTracks={this.state.playListTracks}
-                      ></Playlist>
-                    )}
+                    render={() => <Playlist></Playlist>}
+                  />
+                  <Route
+                    path={`/music/library/album/:id`}
+                    render={() => <Album history={this.props.history} onTrackSelected={this.onTrackSelected.bind(this)}></Album>}
                   />
                 </Switch>
               </div>
             </div>
-            <Player />
+            <Player currentTrack={this.state.currentTrack} />
           </div>
         ) : (
           <div>loading..</div>

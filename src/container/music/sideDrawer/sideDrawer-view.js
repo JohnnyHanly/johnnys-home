@@ -19,7 +19,7 @@ import GithubIcon from "@material-ui/icons/GitHub";
 import SearchIcon from "@material-ui/icons/Search";
 import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
-
+import history from "../../../history";
 import "./styles.css";
 
 let mainButtons = (
@@ -58,7 +58,12 @@ var view = function () {
         <div className="mt-3 ml-2">
           Recently Played
           {this.props.recentlyPlayed.map((x) => (
-            <ListItem className="recentTrack" onClick={() => console.log(x)}>
+            <ListItem
+              className="recentTrack"
+              button
+              component={Link}
+              to={`library/album/${x.track.album.id}`}
+            >
               <ListItemIcon>
                 <Avatar src={x.track.album.images[2].url} />
               </ListItemIcon>

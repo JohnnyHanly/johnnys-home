@@ -1,5 +1,5 @@
 import React from "react";
-import ComponentView from "./playlist-view";
+import ComponentView from "./album-view";
 import { withRouter } from "react-router-dom";
 var Spotify = require("spotify-web-api-js");
 var spotifyApi = new Spotify();
@@ -11,29 +11,29 @@ class Main extends React.Component {
   }
 
   async componentDidMount() {
-    console.log("PLAYLIST", this.props.match.params.id);
-    await this.getPlaylist(this.props.match.params.id);
-    await this.getPlaylistTracks(this.props.match.params.id);
+    console.log("ALBUUM", this.props.match.params.id);
+    await this.getAlbum(this.props.match.params.id);
+    await this.getAlbumTracks(this.props.match.params.id);
   }
-  async getPlaylist(id) {
+  async getAlbum(id) {
     await spotifyApi
-      .getPlaylist(id)
+      .getAlbum(id)
       .then((res) => {
         console.log(res);
         this.setState({
-          playlist: res,
+          album: res,
         });
       })
       .catch((err) => console.log(err));
   }
-  async getPlaylistTracks(id) {
+  async getAlbumTracks(id) {
     await spotifyApi
-      .getPlaylistTracks(id)
+      .getAlbumTracks(id)
       .then((res) => {
-        console.log(res);
+        console.log("TRACKS",res)
         this.setState({
-          playlistTracks: res.items,
-          doneLoading: true,
+          albumTracks: res.items,
+          doneLoading:true
         });
       })
       .catch((err) => console.log(err));

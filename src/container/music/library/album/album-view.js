@@ -4,19 +4,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   Typography,
   Card,
-  IconButton,
   CardContent,
   CardMedia,
-  Slider,
-  Icon,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Button,
-  Drawer,
-  Divider,
-  ListItemAvatar,
 } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
@@ -37,48 +30,55 @@ var view = function () {
             className="col-12 col-sm-5"
             style={{
               maxWidth: 550,
-              maxHeight: 600,
+              maxHeight: 650,
               backgroundColor: "transparent",
               boxShadow: "none",
             }}
           >
             <CardMedia
               style={{ height: 500, width: 500 }}
-              image={this.state.playlist.images[0].url}
+              image={this.state.album.images[0].url}
             />
             <CardContent>
               <Typography
                 className="row justify-content-center"
-                style={{ fontFamily: "Ubuntu", fontWeight: "500" }}
-                variant="h6"
+                style={{ fontFamily: "Ubuntu", fontWeight: "650" }}
+                variant="h4"
               >
-                {this.state.playlist.name}
+                {this.state.album.name}
               </Typography>
               <Typography
                 className="row justify-content-center"
                 style={{ color: "rgba(255, 255, 255, 0.7)" }}
                 variant="subtitle1"
               >
-                {this.state.playlist.owner.display_name}
+                {this.state.album.artists[0].name} tracks
               </Typography>
               <Typography
                 className="row justify-content-center"
                 style={{ color: "rgba(255, 255, 255, 0.7)" }}
                 variant="subtitle1"
               >
-                {this.state.playlist.tracks.total} tracks
+                {this.state.album.tracks.total} 
+              </Typography>
+              <Typography
+                className="row justify-content-center"
+                style={{ color: "rgba(255, 255, 255, 0.7)" }}
+                variant="subtitle1"
+              >
+                {this.state.album.release_date}
               </Typography>
             </CardContent>
           </Card>
           <div className="col-12 col-sm-7">
             <List style={{ width: "100%" }}>
-              {this.state.playlistTracks.map((x) => (
+              {this.state.albumTracks.map((x) => (
                 <ListItem
                   className="trackListItem"
-                  // onClick={this.props.onTrackSelected(x)}
-                  key={x.track.id}
+                  onClick={() => this.props.onTrackSelected(x)}
+                  key={x.id}
                   style={
-                    this.props.currentlyPlaying === x.track.name &&
+                    // this.props.currentlyPlaying === x.track.name &&
                     this.props.isPlaying
                       ? {
                           background: "#1db954",
@@ -91,8 +91,7 @@ var view = function () {
                       cursor: "pointer",
                     }}
                   >
-                    {this.props.currentlyPlaying === x.track.name &&
-                    this.props.isPlaying ? (
+                    {this.props.isPlaying ? (
                       <PauseIcon onClick={this.props.pauseSong} />
                     ) : (
                       <PlayArrowIcon
@@ -101,14 +100,14 @@ var view = function () {
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    primary={x.track.name}
-                    secondary={x.track.artists[0].name}
+                    primary={x.name}
+                    secondary={x.artists[0].name}
                   />
                   <ListItemText
                     style={{
                       textAlign: "right",
                     }}
-                    primary={this.convertTimeStamp(x.track.duration_ms)}
+                    primary={this.convertTimeStamp(x.duration_ms)}
                   />
                 </ListItem>
               ))}
