@@ -1,6 +1,11 @@
 import React from "react";
 import ComponentView from "./music-view";
 import axios from "axios";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as currentTrackActions from "../../actions/currentTrackActions";
+import PropTypes from "prop-types";
+
 import hash from "../../hash";
 import history from "../../history";
 import { withRouter } from "react-router-dom";
@@ -15,6 +20,7 @@ const scopes = [
 ];
 const authEndpoint = "https://accounts.spotify.com/authorize";
 const spotifyToken = localStorage.getItem("spotify-token");
+
 class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +35,7 @@ class Main extends React.Component {
   async componentDidMount() {
     let _token = null;
     console.log("SPOT TOEKN", spotifyToken);
+    this.props.currentTrackActions.fetchCurrentTrack();
 
     if (localStorage.getItem("spotify-token") == "undefined" || null) {
       console.log("HEERE");
@@ -49,22 +56,18 @@ class Main extends React.Component {
   }
 
   async onTrackSelected(track) {
+    console.log("TRACK SELECTED");
     let playbackString = `spotify:track:${track.id}`;
-    console.log(this.state);
+    console.log(playbackString);
     var spotifyApi = new Spotify();
+
     await spotifyApi
       .play({
         uris: [playbackString],
       })
       .then((res) => {
         console.log(res);
-
-        spotifyApi.getMyCurrentPlayingTrack().then((res1) => {
-          console.log("DONE")
-          this.setState({
-            currentTrack: res1,
-          });
-        });
+        this.props.currentTrackActions.fetchCurrentTrack();
       });
   }
   playingSucc() {
@@ -82,14 +85,6 @@ class Main extends React.Component {
         this.setState({
           playlists: res.items,
         });
-      })
-      .catch((err) => console.log(err));
-
-    await spotifyApi
-      .getMyCurrentPlayingTrack()
-      .then((res) => {
-        this.setState({ currentTrack: res });
-        console.log(res);
       })
       .catch((err) => console.log(err));
 
@@ -125,4 +120,20 @@ class Main extends React.Component {
     return ComponentView.bind(this)();
   }
 }
-export default withRouter(Main);
+
+Main.propTypes = {
+  currentTrackActions: PropTypes.object,
+  currentTrack: PropTypes.object,
+};
+function mapStateToProps(state) {
+  return {
+    currentTrack: state.currentTrack,
+  };
+}
+function mapDispatchToProps(dispatch) {
+  console.log(dispatch);
+  return {
+    currentTrackActions: bindActionCreators(currentTrackActions, dispatch),
+  };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Main));

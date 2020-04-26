@@ -20,6 +20,8 @@ import {
 } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
+import LinkedInIcon from "@material-ui/icons/LinkedIn";
+
 import BackArrow from "@material-ui/icons/ArrowBack";
 import history from "../../../../history";
 

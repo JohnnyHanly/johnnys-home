@@ -1,33 +1,63 @@
 import React from "react";
 import ComponentView from "./player-view";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as currentTrackActions from "../../../actions/currentTrackActions";
+import PropTypes from "prop-types";
 var Spotify = require("spotify-web-api-js");
 var spotifyApi = new Spotify();
 
 class Main extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      doneLoading: false,
+    };
   }
 
   async componentDidMount() {
-    console.log("MOUNT", this.props.currentTrack);
+    this.props.currentTrackActions.fetchCurrentTrack();
+  }
+  async componentWillReceiveProps(nextProps) {
+    console.log(nextProps, this.props)
+    // if (nextProps.currentTrack !== this.props.currentTrack) {
+    //   this.props.currentTrackActions.fetchCurrentTrack();
+    // }
+  }
 
-    await this.setState({
-      currentTrack: this.props.currentTrack,
+  async onPlay() {
+    await spotifyApi.play();
+
+    this.setState({
+      isPlaying: true,
     });
   }
-  async componentWillReceiveProps() {
-    await spotifyApi
-      .getMyCurrentPlayingTrack()
-      .then((res) => {
-        this.setState({ currentTrack: res });
-        console.log(res);
-      })
-      .catch((err) => console.log(err));
+
+  async onPause() {
+    await spotifyApi.pause();
+
+    this.setState({
+      isPlaying: false,
+    });
   }
 
   render() {
     return ComponentView.bind(this)();
   }
 }
-export default Main;
+
+Main.propTypes = {
+  currentTrackActions: PropTypes.object,
+  currentTrack: PropTypes.object,
+};
+function mapStateToProps(state) {
+  return {
+    currentTrack: state.currentTrack,
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    currentTrackActions: bindActionCreators(currentTrackActions, dispatch),
+  };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

@@ -1,6 +1,7 @@
 import React from "react";
 import ComponentView from "./playlist-view";
 import { withRouter } from "react-router-dom";
+
 var Spotify = require("spotify-web-api-js");
 var spotifyApi = new Spotify();
 

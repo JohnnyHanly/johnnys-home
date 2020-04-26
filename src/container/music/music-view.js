@@ -93,7 +93,7 @@ var view = function () {
                 </Switch>
               </div>
             </div>
-            <Player currentTrack={this.state.currentTrack} />
+            <Player />
           </div>
         ) : (
           <div>loading..</div>

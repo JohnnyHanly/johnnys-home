@@ -8,10 +8,15 @@ import {
   CardMedia,
   Slider,
 } from "@material-ui/core";
+import PauseIcon from "@material-ui/icons/Pause";
+import PlayArrowIcon from "@material-ui/icons/PlayArrowRounded";
+import NextIcon from "@material-ui/icons/SkipNextRounded";
+import BackIcon from "@material-ui/icons/SkipPreviousRounded";
+
 import "./styles.css";
 
 var view = function () {
-  console.log(this.props);
+  console.log(this.state);
   return (
     <Card
       style={{
@@ -22,7 +27,7 @@ var view = function () {
         paddingBottom: "5px",
       }}
     >
-      {this.state.currentTrack != null ? (
+      {this.props.currentTrack ? (
         <div className="row justify-content-start align-items-center">
           <div className="col-3">
             <Card style={{ backgroundColor: "transparent", boxShadow: "none" }}>
@@ -33,14 +38,14 @@ var view = function () {
                     height: 80,
                     marginLeft: "4%",
                   }}
-                  image={this.state.currentTrack.item.album.images[1].url}
+                  image={this.props.currentTrack.item.album.images[1].url}
                 />
                 <CardContent style={{ flex: "1 0 auto", padding: "15px" }}>
                   <Typography variant="h5">
-                    {this.state.currentTrack.item.name}{" "}
+                    {this.props.currentTrack.item.name}{" "}
                   </Typography>
                   <Typography className="text-muted" variant="caption">
-                    {this.state.currentTrack.item.artists[0].name}
+                    {this.props.currentTrack.item.artists[0].name}
                   </Typography>
                 </CardContent>
               </div>
@@ -49,9 +54,21 @@ var view = function () {
 
           <div className="col-6">
             <div className="row justify-content-center">
-              <div className="col-1">left</div>
-              <div className="col-1">mid</div>
-              <div className="col-1">next</div>
+              <div className="col-1">
+                <BackIcon />
+              </div>
+              {this.props.isPlaying ? (
+                <div className="col-1" onClick={() => this.onPause()}>
+                  <PauseIcon />
+                </div>
+              ) : (
+                <div className="col-1" onClick={() => this.onPause()}>
+                  <PlayArrowIcon />
+                </div>
+              )}
+              <div className="col-1">
+                <NextIcon />
+              </div>
             </div>
             <div className="row justify-content-center">
               <div className="col-2"> 0:00</div>
